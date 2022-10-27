@@ -1,16 +1,129 @@
-package main;
 import java.util.ArrayList;
 
 public class Main {
 
     public static void main(String[] args) {
-        //a
     }
-    
+
 }
+//Comprador
 class Comprador{
-    //a
+    private String queBebiste;
+    private int cuantoVuelto;
+    public Comprador(Moneda m ,int seleccion , Expendedor maquina){
+        this.cuantoVuelto=0;
+        maquina.comprarBebida(m, seleccion);
+        queBebiste =  (maquina.comprarBebida(m, seleccion)).beber();
+        while(maquina.getCuentaDeVuelto()!=0){
+            cuantoVuelto = cuantoVuelto + (maquina.getVuelto()).getValor();
+        }
+    }
+
+    public String getQueBebiste(){
+        return queBebiste;
+    }
+    public int getCuantoVuelto(){
+        return cuantoVuelto;
+    }
 }
+//Comprador
+
+
+//Expendedor
+class Expendedor{
+    private Deposito coca;
+    private Deposito sprite;
+    private Deposito fanta;
+    private int vuelto;
+    private int precios;
+    public Expendedor(int cantidad ,int precios){
+        this.precios = precios;
+        coca = new Deposito();
+        sprite = new Deposito();
+        fanta = new Deposito();
+        for (int i = 0; i < cantidad; i++) {
+            Bebida b1= new CocaCola(i+100);
+            coca.addBebida(b1);
+
+        }
+        for (int k = 0; k < cantidad; k++) {
+            Bebida b1= new Sprite(k+200);
+            sprite.addBebida(b1);
+
+        }
+        for (int j = 0; j < cantidad; j++) {
+            Bebida b1= new Fanta(j+300);
+            fanta.addBebida(b1);
+
+        }
+    }
+    public Bebida comprarBebida(Moneda m ,int seleccion){
+        if (m.getValor() == precios) {
+            switch (seleccion){
+                case 1: return coca.getBebida();
+                case 2: return sprite.getBebida();
+                case 3: return fanta.getBebida();
+            }
+        }
+        if(m.getValor() > precios){
+            vuelto = m.getValor() - precios;
+            switch (seleccion){
+                case 1: return coca.getBebida();
+                case 2: return sprite.getBebida();
+                case 3: return fanta.getBebida();
+            }
+        }
+        return null;
+    }
+    public Moneda getVuelto(){
+        if (vuelto!=0) {
+            vuelto = vuelto - 100;
+            return new Moneda100();
+        }else return null;
+    }
+    public int getCuentaDeVuelto(){
+        return vuelto;
+    }
+}
+//Expendedor
+
+
+//Monedas
+class Moneda{
+    public Moneda(){
+
+    }
+    public int getValor(){
+        return 0;
+    }
+}
+class Moneda100 extends Moneda{
+    public Moneda100(){
+
+    }
+    public int getValor(){
+        return super.getValor() + 100;
+    }
+}
+class Moneda500 extends Moneda{
+    public Moneda500(){
+
+    }
+    public int getValor(){
+        return super.getValor() + 500;
+    }
+}
+class Moneda1000 extends Moneda{
+    public Moneda1000(){
+
+    }
+    public int getValor(){
+        return super.getValor() + 1000;
+    }
+}
+//Monedas
+
+
 //Bebidas-Sabores
 abstract class Bebida{
     private int serie;
@@ -50,36 +163,16 @@ class Fanta extends Bebida{
 }
 //Bebidas-Sabores
 
-//Monedas
-class Moneda{
-    public Moneda(){
-        
-    }
-}
-class Moneda100{
-    public Moneda100(){
-        
-    }
-}
-class Moneda500{
-    public Moneda500(){
-        
-    }
-}
-class Moneda1000{
-    public Moneda1000(){
-        
-    }
-}
-//Monedas
+
+//"Almacen"
 class Deposito{
     private ArrayList<Bebida> almacen;
-     public Deposito(){
+    public Deposito(){
         almacen = new ArrayList<Bebida>();
     }
     public void addBebida(Bebida b1){
         almacen.add(b1);
-        
+
     }
     public Bebida getBebida(){
         if (almacen.size()!=0) {
@@ -88,28 +181,4 @@ class Deposito{
         }else return null;
     }
 }
-class Expendedor{
-    private Deposito coca;
-    private Deposito sprite;
-    public Expendedor(int n){
-        coca = new Deposito();
-        sprite = new Deposito();
-        for (int i = 0; i < n; i++) {
-            Bebida b1= new CocaCola(i+100);
-            coca.addBebida(b1);
-            
-        }
-         for (int k = 0; k < n; k++) {
-            Bebida b1= new Sprite(k+200);
-            sprite.addBebida(b1);
-            
-        }
-    }
-    public Bebida comprarBebida(Moneda m ,int n){
-        switch (n){
-              case 1: return coca.getBebida();
-              case 2: return sprite.getBebida();
-          }
-        return null;  
-    }
-}
+//"Almacen"
